@@ -10,6 +10,7 @@ from pydantic import BaseModel
 class Blockchain():
 
     def __init__(self):
+        """initial blockchain"""
         self.chain = []
         self.current_trxs = []
         self.New_Block(previous_hash = 1, proof = 100)
@@ -32,10 +33,15 @@ class Blockchain():
         self.chain.append(block)
         return block
         
-    def New_Trx(self, National_Code, Date_of_visit, Type_of_disease):
+    def New_Trx(self, sender, recipient, amount):
         """Add a new transaction to the memory pool"""
-        self.current_trxs.append({'National Code': National_Code, 'Date of visit': Date_of_visit,
-                                 'Type of disease' : Type_of_disease})
+        self.current_trxs.append(
+        {
+            'sender': sender, 
+            'recipient': recipient,
+            'amount' : amount
+        }
+        )
 
         return self.Last_Block['index'] + 1 
 
@@ -54,10 +60,10 @@ class Blockchain():
 
     @staticmethod
     def Valid_Proof(last_proof, proof):
-        
+        """check if this proof is ok or not"""
         this_proof = f'{proof}{last_proof}'.encode()
         this_proof_hash = hashlib.sha256(this_proof).hexdigest()
-        return this_proof_hash[:4] == '0000'
+        return this_proof_hash[:5] == '00000'
 
 
     def Proof_Of_Work(self, last_proof):
@@ -70,6 +76,7 @@ class Blockchain():
 
 
 Node_Id = str(uuid4())
+
 
 blockchain = Blockchain()
 
@@ -95,17 +102,19 @@ def Mine():
     block = blockchain.New_Block(proof, previous_hash)
 
     result = {
-        'message' : 'New block created',
-        'index'   :  block['index'],
-        'trxs'    :  block['trxs'],
-        'proof'   :  block['proof'],
+        'message'       : 'New block created',
+        'index'         :  block['index'],
+        'trxs'          :  block['trxs'],
+        'proof'         :  block['proof'],
         'previous_hash' : block['previous_hash'],
     }
+    
     return jsonable_encoder(result)
 
 
 @app.post('/trxs_new')
 def New_Trx(values_trx:Data_Trx):
+    """will add a new transaction"""
     this_block = blockchain.New_Trx(values_trx.sender, values_trx.recipient, values_trx.amount)
     response = {'message' : f'will be added to block {this_block}'}
     return jsonable_encoder(response)
@@ -113,6 +122,7 @@ def New_Trx(values_trx:Data_Trx):
 
 @app.get('/chain')
 def Full_Chain():
+    """returns the full chain"""
     response = {
         'Chain' : blockchain.chain,
         'Length': len(blockchain.chain)

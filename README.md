@@ -10,7 +10,7 @@
 
 ## Intro:
 
-This is the first project that me wrote and implemented in the area of blockchain. It was a great experience in pirouzchain group with supervisor M.Sc Seyedeh Somayeh Fatemi Nasab and I learned a lot of new things about blockchain during this time.
+This is the first project that i wrote and implemented in the area of blockchain. It was a great experience in pirouzchain group with supervisor M.Sc Seyedeh Somayeh Fatemi Nasab and I learned a lot of new things about blockchain during this time.
 
 > I am also very grateful to my lecturer, M.Sc. Seyedeh Somayeh Fatemi Nasab, who guided me in this direction and taught me the concepts of the blockchain world.
 
